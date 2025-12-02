@@ -3,16 +3,16 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 #hyperparameters
-batch_size = 32 # number of independent sequences to process in parallel
-block_size = 8 # maximum context size for predictions
+batch_size = 64 # number of independent sequences to process in parallel
+block_size = 256 # maximum context size for predictions
 max_iters = 5000
 eval_interval = 500
-learning_rate = 1e-3
+learning_rate = 3e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
-n_embd = 32
-n_layers = 4
-n_head = 4
+n_embd = 384
+n_layers = 6
+n_head = 6
 dropout = 0.2
 
 
@@ -122,7 +122,7 @@ class Block(nn.Module):
     """ Transformer block: communication followed by computation"""
     def __init__(self, n_embd, n_head):
         super().__init__()
-        head_size = n_embd // 4
+        head_size = n_embd // n_head
         self.sa = MultiHeadAttention(n_head, head_size)
         self.ffn = FeedForward(n_embd)
         self.ln1 = nn.LayerNorm(n_embd)
@@ -141,7 +141,6 @@ class BigramLanguageModel(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
         self.position_embedding_table = nn.Embedding(block_size, n_embd)
         self.blocks = nn.Sequential(*[Block(n_embd, n_head=n_head) for _ in range(n_layers)])
-        self.sa_heads = MultiHeadAttention(4, n_embd // 4) # self-attention head
         self.ln_f = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size)
         
@@ -151,8 +150,8 @@ class BigramLanguageModel(nn.Module):
         token_embd = self.token_embedding_table(idx) # (B,T,C)
         position_embd = self.position_embedding_table(torch.arange(T, device=token_embd.device)) # (T,C)
         x = token_embd + position_embd # (B,T,C)
-        x = self.sa_heads(x)
         x = self.blocks(x) # (B,T,C)
+        x = self.ln_f(x)
         logits = self.lm_head(x) # (B,T,vocab_size)
 
         if targets is None:
@@ -162,7 +161,6 @@ class BigramLanguageModel(nn.Module):
             logits = logits.view(B*T, C)
             targets = targets.view(B*T)
             loss = F.cross_entropy(logits, targets)
-
         return logits, loss
 
     def generate(self, idx, max_new_tokens):
@@ -207,4 +205,9 @@ for iter in range(max_iters):
 # generate from the model
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
 generated_indices = model.generate(context, max_new_tokens=500)
-print(decode(generated_indices[0].tolist()))
+generated_text = decode(generated_indices[0].tolist())
+print(generated_text)
+
+with open('generated_output.txt', 'w') as f:
+    f.write(generated_text)
+print("Generated ouput saved to generated_output.txt")

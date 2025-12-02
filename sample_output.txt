@@ -1,0 +1,37 @@
+step 0: train loss 4.2906, val loss 4.2891
+step 500: train loss 1.9813, val loss 2.0632
+step 1000: train loss 1.5758, val loss 1.7500
+step 1500: train loss 1.4113, val loss 1.6115
+step 2000: train loss 1.3189, val loss 1.5523
+step 2500: train loss 1.2540, val loss 1.5067
+step 3000: train loss 1.2021, val loss 1.5042
+step 3500: train loss 1.1572, val loss 1.4915
+step 4000: train loss 1.1127, val loss 1.4953
+step 4500: train loss 1.0660, val loss 1.5037
+
+Come your king, have been before us it?
+
+CAMILLO:
+I am poor fellow, so.
+
+ESCALUS:
+Half all half a winter
+To be you well. Good to sink up your pleasure,
+That's a power or little hunts.
+
+DUKE VINCENTIO:
+Not for this so would dies or father,
+Honourable your pitience.
+
+Provost:
+Here is.
+
+LUCIO:
+No, in so much confer, but a strange in of
+lame; here's a general.
+
+Provost:
+My gracious down lire-like, though for else sin
+Whereby yet should be sduiling of direct drink,
+For methinks me in blood cottradice
+Generated ouput saved to generated_output.txt
